@@ -35,8 +35,6 @@ describe("#rawScores", function() {
     expect(rawScores[0]).toEqual("25")
   });
   it("should return a raw string concat of both bowls when one is miss", function() {
-    debugger
-    bowlingGame
     expect(rawScores[1]).toEqual("50")
   });
   it("should return a raw string X", function() {
