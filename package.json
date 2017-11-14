@@ -1,0 +1,22 @@
+{
+  "name": "bowling",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/bowlingGame.js",
+  "scripts": {
+    "test": "testem"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arinchoi03/bowling.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arinchoi03/bowling/issues"
+  },
+  "homepage": "https://github.com/arinchoi03/bowling#readme",
+  "devDependencies": {
+    "jasmine": "^2.8.0"
+  }
+}
