@@ -1,5 +1,6 @@
 function BowlingGame(input) {
   this.input = input;
+  this.finalScore = this.calculateScore() || 0;
 }
 
 BowlingGame.prototype.allTurns = function() {
@@ -8,6 +9,11 @@ BowlingGame.prototype.allTurns = function() {
 
 BowlingGame.prototype.rawScores = function() {
   let allTurns = this.allTurns()
+
+  // taking care of last turn where there are three rolls
+  let lastTurn = allTurns.pop()
+  allTurns.push(lastTurn.slice(0,2), lastTurn.slice(2))
+
   return allTurns.map(function(turn) {
     if (turn === "X") {
       return "X"
@@ -19,6 +25,12 @@ BowlingGame.prototype.rawScores = function() {
       return turn
     }
   })
+}
+
+BowlingGame.prototype.calculateScore = function() {
+  var currentTurns = this.allTurns();
+  this.finalScore = this.evaluateTurns(currentTurns)
+  return this.finalScore;
 }
 
 function formatEmpties(turn) {
@@ -39,9 +51,31 @@ function formatEmpties(turn) {
 function formatSpares(turn) {
   let rawScore = turn[0]
   let spareScore = 10 - (+turn[0])
+
   return rawScore += spareScore
 }
 
+BowlingGame.prototype.evaluateTurns = function(turns){
+  let scoreToAdd
+    , rawScores = this.rawScores()
+    , score = 0
+    , turnsLimit = (turns.length < 10) ? turns.length : 10;
+
+  for (var i = 0; i < turnsLimit; i++) {
+    if (turns[i] === "X") {
+      scoreToAdd = this.evaluateStrike(i, rawScores)
+      score += scoreToAdd
+    } else if (turns[i].includes("/")) {
+      scoreToAdd = this.evaluateSpare(i, rawScores)
+      score += scoreToAdd
+    } else {
+      let first = +(rawScores[i][0])
+      let second = +(rawScores[i][1])
+      score += first + second
+    }
+  }
+  return score;
+}
 
 BowlingGame.prototype.evaluateStrike = function(idx, rawScores) {
   let next = rawScores[idx + 1] || "0"
