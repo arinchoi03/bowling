@@ -81,3 +81,21 @@ describe("#evaluateSpare", function(){
   })
 })
 
+describe("Final score", function() {
+  it('should equal 300 for a perfect game of strikes', function() {
+    let scores = "X X X X X X X X X X X X"
+    let newGame = new BowlingGame(scores);
+    expect(newGame.finalScore).toEqual(300);
+  });
+  it('should equal 90 for a straight game of nine pins', function() {
+    let scores = "9- 9- 9- 9- 9- 9- 9- 9- 9- 9-"
+    let newGame = new BowlingGame(scores);
+    expect(newGame.finalScore).toEqual(90);
+  });
+  it('should equal 150 for a straight game of five pins and spare', function() {
+    let scores = "5/ 5/ 5/ 5/ 5/ 5/ 5/ 5/ 5/ 5/5"
+    let newGame = new BowlingGame(scores);
+    expect(newGame.finalScore).toEqual(150);
+  });
+});
+
