@@ -39,6 +39,46 @@ describe("#rawScores", function() {
   });
 })
 
+describe("#validateInput", function() {
+  it("should invalidate input with rolls per frame that add up to over 10", function() {
+    let scores = "78 2/";
+    let bowlingGame = new BowlingGame(scores);
+    expect(bowlingGame.validateInput()).toEqual(false);
+  });
+  it("should validate input with rolls per frame that add up to under 10", function() {
+    let scores = "25 2/";
+    let bowlingGame = new BowlingGame(scores);
+    expect(bowlingGame.validateInput()).toEqual(true);
+  });
+  describe("with input more than 10 frames", function(){
+    describe("with valid extra bowls", function() {
+      it("should validate input", function() {
+        let scores = "71 2/ -7 44 -8 52 71 8/ 81 X 12"; // 12 frames
+        // what about "71 2/ -7 44 -8 52 71 8/ 81 X X X"
+        let bowlingGame = new BowlingGame(scores);
+        expect(bowlingGame.validateInput()).toEqual(true);
+      });
+    })
+    describe("with no valid extra bowls", function(){
+      it("should invalidate input", function() {
+        let scores = "71 2/ -7 44 -8 52 71 8/ 81 11 15 8-"; // 12 frames
+        let bowlingGame = new BowlingGame(scores);
+        expect(bowlingGame.validateInput()).toEqual(false);
+      });
+    })
+  })
+  it("should validate input with 10 frames", function() {
+    let scores = "71 2/ -7 44 -8 X 71 8/ 81 11"; // 10 frames
+    let bowlingGame = new BowlingGame(scores);
+    expect(bowlingGame.validateInput()).toEqual(true);
+  });
+  it("should validate input with less than 10 frames", function() {
+    let scores = "71 2/ -7 44 -8 X 71"; // 7 frames
+    let bowlingGame = new BowlingGame(scores);
+    expect(bowlingGame.validateInput()).toEqual(true);
+  });
+})
+
 describe("#evaluateStrike", function(){
   let scores, bowlingGame, rawScores;
   beforeEach(function() {
