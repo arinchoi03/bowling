@@ -11,7 +11,11 @@ class BowlingGame {
     let allTurns = this.allTurns();
     // taking care of last turn where there are three rolls
     let lastTurn = allTurns.pop();
-    allTurns.push(lastTurn.slice(0, 2), lastTurn.slice(2));
+    if (lastTurn.length > 2) {
+      allTurns.push(lastTurn.slice(0, 2), lastTurn.slice(2));
+    } else {
+      allTurns.push(lastTurn)
+    }
 
     return allTurns.map(function(turn) {
       if (turn === "X") {
@@ -25,9 +29,45 @@ class BowlingGame {
       }
     });
   }
+  validateInput() {
+    let valid = true;
+    let framesToValidate = this.rawScores.filter((frame) => {
+      return !frame.includes("X")
+    })
+    for (let frame = 0; frame < framesToValidate.length; frame++) {
+      let current = framesToValidate[frame];
+      if (current.length === 2 && ((+current[0]) + (+current[1])) > 10) {
+        valid = false;
+      }
+      // A 'flag' from formatSpares() function
+      if (current.includes("/")) {
+        valid = false;
+      }
+    }
+    if (this.allTurns().length > 10) {
+      valid = this.validateExtraFrames()
+    }
+    return valid
+  }
+  validateExtraFrames() {
+    let allTurns = this.allTurns();
+    let tenthTurn = allTurns[9]
+    let remainingTurns = allTurns.slice(10).join("")
+    if (tenthTurn === "X" && remainingTurns.length > 2) {
+      return false
+    } else if (tenthTurn.includes("/") && remainingTurns.length > 1) {
+      return false
+    } else if (!tenthTurn.includes("/") && tenthTurn !== "X" && remainingTurns) {
+      return false
+    } else {
+      return true
+    }
+  }
   calculateScore() {
     var currentTurns = this.allTurns();
-    this.finalScore = this.evaluateTurns(currentTurns);
+    if (this.validateInput()) {
+      this.finalScore = this.evaluateTurns(currentTurns);
+    }
     return this.finalScore;
   }
   evaluateTurns(turns) {
@@ -91,8 +131,16 @@ function formatEmpties(turn) {
 }
 
 function formatSpares(turn) {
-  let rawScore = turn[0];
-  let spareScore = 10 - (+turn[0]);
+  let spare
+    , rawScore = turn[0];
+
+  if (turn[0] > 9) {
+    // if the value is too high (cannot be valid spare)
+    // just set the spare score to 10, will invalidate
+    spareScore = "/";
+  } else {
+    spareScore = 10 - (+turn[0]);
+  }
 
   return rawScore += spareScore;
 }
