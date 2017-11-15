@@ -133,3 +133,21 @@ describe("Final score", function() {
   });
 });
 
+describe("#lastFullFrame", function() {
+  describe("when all frames are fully-scored", function(){
+    it("should return the last full-frame index", function() {
+      let scores = "9- 15"
+      let allTurns = scores.split(" ");
+      let lastFrame = lastFullFrame(allTurns)
+      expect(lastFrame).toEqual(1);
+    })
+  });
+  describe("when all frames are not fully-scored", function(){
+    it("should return the last full-frame index", function() {
+      let scores = "9- 15 3"
+      let allTurns = scores.split(" ");
+      let lastFrame = lastFullFrame(allTurns)
+      expect(lastFrame).toEqual(1);
+    })
+  });
+})
