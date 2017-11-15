@@ -1,24 +1,21 @@
 class BowlingGame {
   constructor(input) {
-    this.input = input;
-    this.rawScores = this.rawScores() || [];
+    this.allTurns = input && input.split(" ") || [];
+    this.rawScores = input ? this.rawScores() : [];
     this.finalScore = this.calculateScore() || 0;
     this.partialScore = this.calculatePartialScore() || 0;
   }
-  allTurns() {
-    return this.input.split(" ");
-  }
+
   rawScores() {
-    let allTurns = this.allTurns();
     // taking care of last turn where there are three rolls
-    let lastTurn = allTurns.pop();
+    let lastTurn = this.allTurns.pop();
     if (lastTurn.length > 2) {
-      allTurns.push(lastTurn.slice(0, 2), lastTurn.slice(2));
+      this.allTurns.push(lastTurn.slice(0, 2), lastTurn.slice(2));
     } else {
-      allTurns.push(lastTurn)
+      this.allTurns.push(lastTurn)
     }
 
-    return allTurns.map(function(turn) {
+    return this.allTurns.map(function(turn) {
       if (turn === "X") {
         return "X";
       } else if (turn.includes("/")) {
@@ -34,7 +31,7 @@ class BowlingGame {
     let valid = true;
     let framesToValidate = this.rawScores.filter((frame) => {
       return !frame.includes("X")
-    })
+    });
     for (let frame = 0; frame < framesToValidate.length; frame++) {
       let current = framesToValidate[frame];
       if (current.length === 2 && ((+current[0]) + (+current[1])) > 10) {
@@ -45,15 +42,16 @@ class BowlingGame {
         valid = false;
       }
     }
-    if (this.allTurns().length > 10) {
+    if (this.allTurns.length > 10) {
       valid = this.validateExtraFrames()
     }
     return valid
   }
+
   validateExtraFrames() {
-    let allTurns = this.allTurns();
-    let tenthTurn = allTurns[9]
-    let remainingTurns = allTurns.slice(10).join("")
+    let tenthTurn = this.allTurns[9];
+    let remainingTurns = this.allTurns.slice(10).join("")
+
     if (tenthTurn === "X" && remainingTurns.length > 2) {
       return false
     } else if (tenthTurn.includes("/") && remainingTurns.length > 1) {
@@ -64,21 +62,23 @@ class BowlingGame {
       return true
     }
   }
+
   calculateScore() {
-    let currentTurns = this.allTurns();
     if (this.validateInput()) {
-      this.finalScore = this.evaluateTurns(currentTurns);
+      this.finalScore = this.evaluateTurns(this.allTurns);
     }
     return this.finalScore;
   }
+
   calculatePartialScore() {
-    let lastFullTurn = lastFullFrame(this.allTurns())
-    var fullTurns = this.allTurns().slice(0, lastFullTurn+1);
+    let lastFullTurn = lastFullFrame(this.allTurns)
+    var fullTurns = this.allTurns.slice(0, lastFullTurn+1);
     if (this.validateInput()) {
       this.partialScore = this.evaluateTurns(fullTurns);
     }
     return this.partialScore;
   }
+
   evaluateTurns(turns) {
     let score = 0
     let turnsLimit = (turns.length < 10) ? turns.length : 10;
@@ -96,6 +96,7 @@ class BowlingGame {
     }
     return score;
   }
+
   evaluateStrike(idx) {
     let next = this.rawScores[idx + 1] || "0";
     let nextNext = this.rawScores[idx + 2] || "0";
@@ -108,7 +109,8 @@ class BowlingGame {
     } else {
       return 10 + (+next[0]) + (+next[1]);
     }
-  };
+  }
+
   evaluateSpare(idx) {
     let next = this.rawScores[idx + 1] || "0";
     let nextVal;
@@ -121,17 +123,16 @@ class BowlingGame {
     return 10 + (+nextVal);
   }
 }
-;
 
 function formatEmpties(turn) {
   let rawScore = "";
 
-  if (turn[0] === "-") {
+  if (turn[0] === "-" || turn[0] === "") {
     rawScore += "0";
   } else {
     rawScore += turn[0];
   }
-  if (turn[1] === "-") {
+  if (turn[1] === "-" || turn[1] === "") {
     rawScore += "0";
   } else {
     rawScore += turn[1];
