@@ -1,17 +1,36 @@
-describe("#allTurns", function() {
+describe("on initialize", function() {
   let scores, bowlingGame;
-  beforeEach(function(){
-    scores = "5- X 8/"
-    bowlingGame = new BowlingGame(scores)
+  describe("allTurns with an input", function() {
+    beforeEach(function(){
+      scores = "5- X 8/"
+      bowlingGame = new BowlingGame(scores)
+    })
+    it("should return an array", function() {
+      let returnValues = bowlingGame.allTurns;
+      expect(returnValues instanceof Array).toBeTruthy();
+    });
+    it("should return a collection of all turns in the input string", function() {
+      expect(bowlingGame.allTurns.length).toEqual(3);
+      expect(bowlingGame.allTurns).toEqual(['5-', 'X', '8/']);
+    });
   })
-  it("should return an array", function() {
-    let returnValues = bowlingGame.allTurns();
-    expect(returnValues instanceof Array).toBeTruthy();
-  });
-  it("should return a collection of all turns in the input string", function() {
-    expect(bowlingGame.allTurns().length).toEqual(3);
-    expect(bowlingGame.allTurns()).toEqual(['5-', 'X', '8/']);
-  });
+
+  describe("all scores with a empty input", function(){
+    beforeEach(function(){
+      scores = ""
+      bowlingGame = new BowlingGame(scores)
+    })
+    it("should set allTurns to an empty object", function(){
+      expect(bowlingGame.allTurns).toEqual([])
+    })
+    it("should set the rawScores to an empty array", function(){
+      expect(bowlingGame.rawScores).toEqual([])
+    })
+    it("should set all the scores to zero", function(){
+      expect(bowlingGame.finalScore).toEqual(0)
+      expect(bowlingGame.partialScore).toEqual(0)
+    })
+  })
 })
 
 describe("#rawScores", function() {
