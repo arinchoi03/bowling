@@ -160,3 +160,12 @@ function determineNextTwoTurns(next, nextNext) {
   }
   return nextVal + nextNextVal;
 }
+
+function lastFullFrame(allTurns) {
+  for (let turn = 0; turn < allTurns.length; turn++) {
+    if (allTurns[turn] !== "X" && allTurns[turn].length === 1) {
+      return turn-1
+    }
+  }
+  return allTurns.length-1;
+}
