@@ -3,6 +3,7 @@ class BowlingGame {
     this.input = input;
     this.rawScores = this.rawScores() || [];
     this.finalScore = this.calculateScore() || 0;
+    this.partialScore = this.calculatePartialScore() || 0;
   }
   allTurns() {
     return this.input.split(" ");
@@ -64,11 +65,19 @@ class BowlingGame {
     }
   }
   calculateScore() {
-    var currentTurns = this.allTurns();
+    let currentTurns = this.allTurns();
     if (this.validateInput()) {
       this.finalScore = this.evaluateTurns(currentTurns);
     }
     return this.finalScore;
+  }
+  calculatePartialScore() {
+    let lastFullTurn = lastFullFrame(this.allTurns())
+    var fullTurns = this.allTurns().slice(0, lastFullTurn+1);
+    if (this.validateInput()) {
+      this.partialScore = this.evaluateTurns(fullTurns);
+    }
+    return this.partialScore;
   }
   evaluateTurns(turns) {
     let score = 0
