@@ -44,3 +44,40 @@ describe("#rawScores", function() {
     expect(rawScores[3]).toEqual("82")
   });
 })
+
+describe("#evaluateStrike", function(){
+  let scores, bowlingGame, rawScores;
+  beforeEach(function() {
+    scores = "X 9- X X X"
+    bowlingGame = new BowlingGame(scores)
+    rawScores = bowlingGame.rawScores()
+  })
+  it("should return the correct score considering next two rolls", function() {
+    expect(bowlingGame.evaluateStrike(0, rawScores)).toEqual(19)
+  })
+  it("should return the correct score considering next two strikes", function() {
+    expect(bowlingGame.evaluateStrike(2, rawScores)).toEqual(30)
+  })
+  it("should return the correct score considering next two rolls at the end of game", function() {
+    expect(bowlingGame.evaluateStrike(3, rawScores)).toEqual(20)
+  })
+})
+
+describe("#evaluateSpare", function(){
+  let scores, bowlingGame, rawScores;
+  beforeEach(function() {
+    scores = "8/ 14 2/ X 9- 7/"
+    bowlingGame = new BowlingGame(scores)
+    rawScores = bowlingGame.rawScores()
+  })
+  it("should return the correct score considering next roll", function() {
+    expect(bowlingGame.evaluateSpare(0, rawScores)).toEqual(11)
+  })
+  it("should return the correct score considering next strike roll", function() {
+    expect(bowlingGame.evaluateSpare(2, rawScores)).toEqual(20)
+  })
+  it("should return the correct score at the end of game", function() {
+    expect(bowlingGame.evaluateSpare(5, rawScores)).toEqual(10)
+  })
+})
+
