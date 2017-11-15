@@ -133,6 +133,50 @@ describe("Final score", function() {
   });
 });
 
+describe("Partial Score", function() {
+  describe("when the partial game input is valid", function() {
+    describe("and all available frames are fully-scored", function() {
+      describe("and the partial score is simple", function() {
+        it("should return the correct simple sum of all scores", function(){
+          let scores = "9- 15"
+          let newGame = new BowlingGame(scores);
+          expect(newGame.partialScore).toEqual(15);
+        })
+      });
+      describe("and the partial score is complex", function() {
+        it("should return the correct complex sum of all scores (including spares/strikes/mises)", function(){
+          let scores = "9- 15 1/ X 18"
+          let newGame = new BowlingGame(scores);
+          expect(newGame.partialScore).toEqual(63);
+        });
+      });
+    })
+    describe("and a frame is partially-scored", function() {
+      describe("and the partial score is simple", function() {
+        it("should return the correct simple sum of all scores without the incomplete frame", function(){
+          let scores = "9- 15 3"
+          let newGame = new BowlingGame(scores);
+          expect(newGame.partialScore).toEqual(15);
+        })
+      });
+      describe("and the partial score is complex", function() {
+        it("should return the correct complex sum of all scores (including spares/strikes/misses) without the incomplete frame", function(){
+          let scores = "9- 15 1/ X 18 2"
+          let newGame = new BowlingGame(scores);
+          expect(newGame.partialScore).toEqual(63);
+        })
+      });
+    })
+  })
+  describe("when the partial game input is invalid", function() {
+    it("should not calculate the score", function(){
+      let scores = "9- 15 49 X 18 2"
+      let newGame = new BowlingGame(scores);
+      expect(newGame.partialScore).toEqual(0);
+    })
+  })
+})
+
 describe("#lastFullFrame", function() {
   describe("when all frames are fully-scored", function(){
     it("should return the last full-frame index", function() {
