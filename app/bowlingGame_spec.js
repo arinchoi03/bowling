@@ -1,9 +1,3 @@
-describe("First test", function() {
-  it('should equal true', function(){
-    expect(true).toEqual(true);
-  });
-});
-
 describe("#allTurns", function() {
   let scores, bowlingGame;
   beforeEach(function(){
@@ -25,7 +19,7 @@ describe("#rawScores", function() {
   beforeEach(function(){
     scores = "25 5- X 8/"
     bowlingGame = new BowlingGame(scores)
-    rawScores = bowlingGame.rawScores();
+    rawScores = bowlingGame.rawScores;
   });
 
   it("returns an array", function() {
@@ -50,7 +44,7 @@ describe("#evaluateStrike", function(){
   beforeEach(function() {
     scores = "X 9- X X X"
     bowlingGame = new BowlingGame(scores)
-    rawScores = bowlingGame.rawScores()
+    rawScores = bowlingGame.rawScores
   })
   it("should return the correct score considering next two rolls", function() {
     expect(bowlingGame.evaluateStrike(0, rawScores)).toEqual(19)
@@ -68,7 +62,7 @@ describe("#evaluateSpare", function(){
   beforeEach(function() {
     scores = "8/ 14 2/ X 9- 7/"
     bowlingGame = new BowlingGame(scores)
-    rawScores = bowlingGame.rawScores()
+    rawScores = bowlingGame.rawScores
   })
   it("should return the correct score considering next roll", function() {
     expect(bowlingGame.evaluateSpare(0, rawScores)).toEqual(11)
