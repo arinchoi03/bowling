@@ -8,7 +8,7 @@ describe("#allTurns", function() {
     let returnValues = bowlingGame.allTurns();
     expect(returnValues instanceof Array).toBeTruthy();
   });
-  it("should return represent each turn", function() {
+  it("should return a collection of all turns in the input string", function() {
     expect(bowlingGame.allTurns().length).toEqual(3);
     expect(bowlingGame.allTurns()).toEqual(['5-', 'X', '8/']);
   });
@@ -22,19 +22,19 @@ describe("#rawScores", function() {
     rawScores = bowlingGame.rawScores;
   });
 
-  it("returns an array", function() {
+  it("should return an array", function() {
     expect(rawScores instanceof Array).toBeTruthy();
   });
-  it("should return a raw string concat of both bowls", function() {
+  it("should return a raw string concatenation of both bowls' string values", function() {
     expect(rawScores[0]).toEqual("25")
   });
-  it("should return a raw string concat of both bowls when one is miss", function() {
+  it("should return a raw string concatenation of both bowls' string values when one is miss", function() {
     expect(rawScores[1]).toEqual("50")
   });
   it("should return a raw string X", function() {
     expect(rawScores[2]).toEqual("X")
   });
-  it("should return a raw string concat of number plus spare remainder", function() {
+  it("should return a raw string concatenation of number (in string format) plus the spare remainder (in string format)", function() {
     expect(rawScores[3]).toEqual("82")
   });
 })
