@@ -15,7 +15,7 @@ describe("on initialize", function() {
     });
   })
 
-  describe("all scores with a empty input", function(){
+  describe("allTurns with an empty input", function(){
     beforeEach(function(){
       scores = ""
       bowlingGame = new BowlingGame(scores)
@@ -33,7 +33,7 @@ describe("on initialize", function() {
   })
 })
 
-describe("#rawScores", function() {
+describe("rawScores", function() {
   let scores, bowlingGame, rawScores;
   beforeEach(function(){
     scores = "25 5- X 8/"
@@ -58,7 +58,7 @@ describe("#rawScores", function() {
   });
 })
 
-describe("#validateInput", function() {
+describe("validateInput", function() {
   it("should invalidate input with rolls per frame that add up to over 10", function() {
     let scores = "78 2/";
     let bowlingGame = new BowlingGame(scores);
@@ -73,7 +73,6 @@ describe("#validateInput", function() {
     describe("with valid extra bowls", function() {
       it("should validate input", function() {
         let scores = "71 2/ -7 44 -8 52 71 8/ 81 X 12"; // 12 frames
-        // what about "71 2/ -7 44 -8 52 71 8/ 81 X X X"
         let bowlingGame = new BowlingGame(scores);
         expect(bowlingGame.validateInput()).toEqual(true);
       });
@@ -98,25 +97,31 @@ describe("#validateInput", function() {
   });
 })
 
-describe("#evaluateStrike", function(){
+describe("evaluateStrike", function(){
   let scores, bowlingGame, rawScores;
   beforeEach(function() {
-    scores = "X 9- X X X"
+    scores = "X 9- X 8/ X 14 X X X"
     bowlingGame = new BowlingGame(scores)
     rawScores = bowlingGame.rawScores
   })
-  it("should return the correct score considering next two rolls", function() {
+  it("should return the correct score considering next two rolls (with a miss)", function() {
     expect(bowlingGame.evaluateStrike(0, rawScores)).toEqual(19)
   })
+  it("should return the correct score considering next two rolls (with a spare)", function() {
+    expect(bowlingGame.evaluateStrike(2, rawScores)).toEqual(20)
+  })
+  it("should return the correct score considering next two rolls", function() {
+    expect(bowlingGame.evaluateStrike(4, rawScores)).toEqual(15)
+  })
   it("should return the correct score considering next two strikes", function() {
-    expect(bowlingGame.evaluateStrike(2, rawScores)).toEqual(30)
+    expect(bowlingGame.evaluateStrike(6, rawScores)).toEqual(30)
   })
   it("should return the correct score considering next two rolls at the end of game", function() {
-    expect(bowlingGame.evaluateStrike(3, rawScores)).toEqual(20)
+    expect(bowlingGame.evaluateStrike(7, rawScores)).toEqual(20)
   })
 })
 
-describe("#evaluateSpare", function(){
+describe("evaluateSpare", function(){
   let scores, bowlingGame, rawScores;
   beforeEach(function() {
     scores = "8/ 14 2/ X 9- 7/"
@@ -211,6 +216,14 @@ describe("#lastFullFrame", function() {
       let allTurns = scores.split(" ");
       let lastFrame = lastFullFrame(allTurns)
       expect(lastFrame).toEqual(1);
+    })
+    describe("with valid extra turns with odd number rolls", function(){
+      it("should return the last full-frame index", function() {
+        let scores = "5/ 5/ 5/ 5/ 5/ 5/ 5/ 5/ 5/ 5/5"
+        let allTurns = scores.split(" ");
+        let lastFrame = lastFullFrame(allTurns)
+        expect(lastFrame).toEqual(9);
+      });
     })
   });
 })
