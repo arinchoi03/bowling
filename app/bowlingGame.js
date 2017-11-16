@@ -1,6 +1,7 @@
 class BowlingGame {
   constructor(input) {
-    this.allTurns = input && input.split(" ") || [];
+    this.input = input
+    this.allTurns = this.input && this.input.split(" ") || [];
     this.rawScores = input ? this.rawScores() : [];
     this.finalScore = this.calculateScore() || 0;
     this.partialScore = this.calculatePartialScore() || 0;
@@ -29,15 +30,21 @@ class BowlingGame {
   }
   validateInput() {
     let valid = true;
+
+    // invalidate nonsense words
+    let matches = this.input.match(/[^0-9\-\/\X\s*]/i)
+    if (matches) valid = false
+
     let framesToValidate = this.rawScores.filter((frame) => {
       return !frame.includes("X")
     });
+
     for (let frame = 0; frame < framesToValidate.length; frame++) {
       let current = framesToValidate[frame];
       if (current.length === 2 && ((+current[0]) + (+current[1])) > 10) {
         valid = false;
       }
-      // A 'flag' from formatSpares() function
+      // An 'invalid flag' from formatSpares() function
       if (current.includes("/")) {
         valid = false;
       }
@@ -98,14 +105,13 @@ class BowlingGame {
   }
 
   evaluateStrike(idx) {
+    // if there aren't any next or nextNext scores, default to zero pts
     let next = this.rawScores[idx + 1] || "0";
     let nextNext = this.rawScores[idx + 2] || "0";
 
     if (next.length === 1) {
       let nextSum = determineNextTwoTurns(next, nextNext);
       return (10 + nextSum);
-    } else if (!next) {
-      return 10;
     } else {
       return 10 + (+next[0]) + (+next[1]);
     }
@@ -172,10 +178,13 @@ function determineNextTwoTurns(next, nextNext) {
 }
 
 function lastFullFrame(allTurns) {
-  for (let turn = 0; turn < allTurns.length; turn++) {
-    if (allTurns[turn] !== "X" && allTurns[turn].length === 1) {
-      return turn-1
+  for (let i = 0; i < allTurns.length; i++) {
+    let currentTurn = allTurns[i]
+    if (currentTurn !== "X" && currentTurn.length === 1) {
+      // return the last frame index where currentTurn isn't a strike
+      // but currentTurn's length is 1 (partial turn)
+      return i - 1
     }
   }
-  return allTurns.length-1;
+  return allTurns.length-1; // if nothing found, return last turn position
 }
