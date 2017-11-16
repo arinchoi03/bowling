@@ -95,6 +95,11 @@ describe("validateInput", function() {
     let bowlingGame = new BowlingGame(scores);
     expect(bowlingGame.validateInput()).toEqual(true);
   });
+  it("should invalidate input nonsense characters", function() {
+    let scores = "78 2/ nX";
+    let bowlingGame = new BowlingGame(scores);
+    expect(bowlingGame.validateInput()).toEqual(false);
+  });
 })
 
 describe("evaluateStrike", function(){
